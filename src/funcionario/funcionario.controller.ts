@@ -44,4 +44,24 @@ export class FuncionarioController {
   async deletar(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.service.deletar(id);
   }
+
+  @Get(':id/ativar')
+  async ativar(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.service.ativar(id);
+      return { message: 'Funcionário ativado com sucesso' };
+    } catch (error) {
+      throw new Error('Erro ao ativar funcionário');
+    }
+  }
+
+  @Get(':id/desativar')
+  async desativar(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.service.desativar(id);
+      return { message: 'Funcionário desativado com sucesso' };
+    } catch (error) {
+      throw new Error('Erro ao desativar funcionário');
+    }
+  }
 }

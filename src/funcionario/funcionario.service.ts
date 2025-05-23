@@ -25,4 +25,36 @@ export class FuncionarioService {
   async deletar(id: number): Promise<number> {
     return this.repository.destroy(id);
   }
+
+  async ativar(id: number) {
+    const funcionario = await this.repository.getOne(id);
+
+    if (!funcionario) {
+      throw new Error('Funcionário não encontrado!');
+    }
+    if (funcionario.ativo == 1) {
+      throw new Error('Funcionário já está ativado!');
+    }
+
+    console.log(funcionario);
+
+    return this.repository.enable(id);
+  }
+
+  async desativar(id: number) {
+    const funcionario = await this.repository.getOne(id);
+
+    if (!funcionario) {
+      throw new Error('Funcionário não encontrado!');
+    }
+    if (funcionario.ativo == 0) {
+      throw new Error('Funcionário já está desativado!');
+    }
+
+    console.log(funcionario);
+
+    return this.repository.disable(id);
+  }
+
+  
 }
