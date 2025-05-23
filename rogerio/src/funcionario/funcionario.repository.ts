@@ -28,4 +28,23 @@ export class FuncionarioRepository {
   async destroy(id_funcionario: number): Promise<number> {
     return this.funcionarioModel.destroy({ where: { id_funcionario } });
   }
+
+  async disable(id_funcionario: number): Promise<[number]> {
+    return this.funcionarioModel.update( { ativo: 0 }, { where: { id_funcionario } } );
+  }
+
+  async enable(id_funcionario: number): Promise<[number]> {
+    return this.funcionarioModel.update( { ativo: 1 }, { where: { id_funcionario } } );
+  }
+
+  async getStatus(id_funcionario: number): Promise<{ ativo: number } | null> {
+    const funcionario = await this.funcionarioModel.findOne({
+      where: { id_funcionario },
+      attributes: ['ativo']
+    });
+
+    return funcionario ? { ativo: funcionario.ativo } : null;
+  }
+
+
 }
