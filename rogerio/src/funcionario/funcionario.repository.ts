@@ -37,14 +37,10 @@ export class FuncionarioRepository {
     return this.funcionarioModel.update( { ativo: 1 }, { where: { id_funcionario } } );
   }
 
-  async getStatus(id_funcionario: number): Promise<{ ativo: number } | null> {
-    const funcionario = await this.funcionarioModel.findOne({
-      where: { id_funcionario },
-      attributes: ['ativo']
-    });
-
-    return funcionario ? { ativo: funcionario.ativo } : null;
-  }
+  // async getStatus(id_funcionario: number): Promise<Funcionario | null> {
+  //   const funcionario = await this.funcionarioModel.findByPk( id_funcionario );
+  //   return funcionario;
+  // }
 
 
 }

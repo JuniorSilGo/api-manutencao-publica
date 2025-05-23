@@ -27,27 +27,31 @@ export class FuncionarioService {
   }
 
   async ativar(id: number) {
-    const status = await this.repository.getStatus(id);
+    const funcionario = await this.repository.getOne(id);
 
-    if (!status) {
+    if (!funcionario) {
       throw new Error('Funcionário não encontrado!');
     }
-    if (status.ativo === 1) {
+    if (funcionario.ativo == 1) {
       throw new Error('Funcionário já está ativado!');
     }
+
+    console.log(funcionario);
 
     return this.repository.enable(id);
   }
 
   async desativar(id: number) {
-    const status = await this.repository.getStatus(id);
+    const funcionario = await this.repository.getOne(id);
 
-    if (!status) {
+    if (!funcionario) {
       throw new Error('Funcionário não encontrado!');
     }
-    if (status.ativo === 0) {
+    if (funcionario.ativo == 0) {
       throw new Error('Funcionário já está desativado!');
     }
+
+    console.log(funcionario);
 
     return this.repository.disable(id);
   }
