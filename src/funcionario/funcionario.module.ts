@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Funcionario } from './funcionario.entity';
+import { Funcionario } from './funcionario.model';
 import { FuncionarioController } from './funcionario.controller';
 import { FuncionarioService } from './funcionario.service';
 import { FuncionarioRepository } from './funcionario.repository';
