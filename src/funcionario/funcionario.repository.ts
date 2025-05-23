@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Funcionario } from './funcionario.entity';
+import { Funcionario } from './funcionario.model';
 
 @Injectable()
 export class FuncionarioRepository {
@@ -21,7 +21,10 @@ export class FuncionarioRepository {
     return this.funcionarioModel.create(dados);
   }
 
-  async update(id_funcionario: number, dados: Partial<Funcionario>): Promise<[number]> {
+  async update(
+    id_funcionario: number,
+    dados: Partial<Funcionario>,
+  ): Promise<[number]> {
     return this.funcionarioModel.update(dados, { where: { id_funcionario } });
   }
 

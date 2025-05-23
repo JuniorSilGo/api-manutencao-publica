@@ -1,6 +1,15 @@
-import {  Controller,  Get,  Post,  Put,  Delete,  Param,  Body,  ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { FuncionarioService } from './funcionario.service';
-import { Funcionario } from './funcionario.entity';
+import { Funcionario } from './funcionario.model';
 
 @Controller('funcionarios')
 export class FuncionarioController {
@@ -15,9 +24,7 @@ export class FuncionarioController {
   async visualizar(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Funcionario | null> {
-
     return this.service.vizualisar(id);
-    
   }
 
   @Post()
@@ -34,9 +41,7 @@ export class FuncionarioController {
   }
 
   @Delete(':id')
-  async deletar(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<number> {
+  async deletar(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.service.deletar(id);
   }
 }

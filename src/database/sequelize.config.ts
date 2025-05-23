@@ -13,4 +13,3 @@ export const DBconfig: SequelizeModuleOptions = {
   autoLoadModels: true,
   synchronize: true,
 };
-

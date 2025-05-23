@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FuncionarioRepository } from './funcionario.repository';
-import { Funcionario } from './funcionario.entity';
+import { Funcionario } from './funcionario.model';
 
 @Injectable()
 export class FuncionarioService {

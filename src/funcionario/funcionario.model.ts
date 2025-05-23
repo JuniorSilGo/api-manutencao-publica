@@ -1,10 +1,16 @@
-import {  Table,  Column,  Model,  DataType,  PrimaryKey,  AutoIncrement,} from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+} from 'sequelize-typescript';
 
 @Table({
   tableName: 'funcionarios',
   timestamps: true,
 })
-
 export class Funcionario extends Model {
   @PrimaryKey
   @AutoIncrement
