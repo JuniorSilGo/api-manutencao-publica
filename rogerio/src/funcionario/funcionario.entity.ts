@@ -19,4 +19,7 @@ export class Funcionario extends Model {
 
   @Column({ type: DataType.INTEGER })
   id_funcao?: number;
+
+  @Column({ type: DataType.INTEGER, defaultValue: 1 })
+  ativo!: number;
 }
