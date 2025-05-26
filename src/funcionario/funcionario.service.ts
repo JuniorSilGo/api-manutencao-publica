@@ -32,7 +32,7 @@ export class FuncionarioService {
     if (!funcionario) {
       throw new Error('Funcionário não encontrado!');
     }
-    if (funcionario.ativo == 1) {
+    if (funcionario.dataValues.ativo == 1) {
       throw new Error('Funcionário já está ativado!');
     }
 
@@ -43,15 +43,15 @@ export class FuncionarioService {
 
   async desativar(id: number) {
     const funcionario = await this.repository.getOne(id);
+    console.log(funcionario?.dataValues);
 
     if (!funcionario) {
       throw new Error('Funcionário não encontrado!');
     }
-    if (funcionario.ativo == 0) {
+    if (funcionario.dataValues.ativo == 0) {
       throw new Error('Funcionário já está desativado!');
     }
 
-    console.log(funcionario);
 
     return this.repository.disable(id);
   }

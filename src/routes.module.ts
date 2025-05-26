@@ -1,7 +1,7 @@
 import { FuncionarioModule } from './funcionario/funcionario.module';
-// qd tiver... import { ServicoModule } from './servico/servico.module';
+import { FuncaoModule } from './funcao/funcao.module';
 
 export const Rotas = [
   FuncionarioModule,
-  // ServicoModule,
+  FuncaoModule
 ];
