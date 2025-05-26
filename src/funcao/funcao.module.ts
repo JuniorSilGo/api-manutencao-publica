@@ -9,5 +9,7 @@ import { FuncaoRepository } from './funcao.repository';
   imports: [SequelizeModule.forFeature([Funcao])],
   controllers: [FuncaoController],
   providers: [FuncaoService, FuncaoRepository],
+  exports: [FuncaoRepository], // <- necessário para que outros módulos usem
+
 })
 export class FuncaoModule {}

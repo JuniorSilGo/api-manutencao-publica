@@ -11,7 +11,7 @@ import {
 import { FuncaoService } from './funcao.service';
 import { Funcao } from './funcao.model';
 
-@Controller('funcaos')
+@Controller('funcoes')
 export class FuncaoController {
   constructor(private readonly service: FuncaoService) {}
 
