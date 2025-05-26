@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { FuncionarioRepository } from './funcionario.repository';
 import { Funcionario } from './funcionario.model';
+import { FuncaoRepository } from '../funcao/funcao.repository';
 
 @Injectable()
 export class FuncionarioService {
-  constructor(private readonly repository: FuncionarioRepository) {}
+  constructor(private readonly repository: FuncionarioRepository
+          ,private readonly funcaoRepository: FuncaoRepository) {}
 
   async listar(): Promise<Funcionario[]> {
     return this.repository.getAll();
@@ -15,8 +17,21 @@ export class FuncionarioService {
   }
 
   async criar(dados: Partial<Funcionario>): Promise<Funcionario> {
-    return this.repository.create(dados);
+  const idfun = dados.id_funcao;
+
+  if (idfun === undefined) {
+    throw new Error('ID da função não informado');
   }
+
+  const funcao = await this.funcaoRepository.getOne(idfun);
+
+  if (!funcao) {
+    throw new Error(`Função com ID ${idfun} não encontrada`);
+  }
+
+  return this.repository.create(dados);
+}
+
 
   async atualizar(id: number, dados: Partial<Funcionario>): Promise<[number]> {
     return this.repository.update(id, dados);
