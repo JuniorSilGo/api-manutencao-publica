@@ -7,9 +7,13 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FuncaoService } from './funcao.service';
 import { Funcao } from './funcao.model';
+import { FuncaoDto } from './dto/funcao.dto';
+import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 
 @Controller('funcoes')
 export class FuncaoController {
@@ -28,14 +32,16 @@ export class FuncaoController {
   }
 
   @Post()
-  async criar(@Body() dados: Partial<Funcao>): Promise<Funcao> {
+  @UsePipes(new ValidationPipe())
+  async criar(@Body() dados: FuncaoDto): Promise<Funcao> {
     return this.service.criar(dados);
   }
 
   @Put(':id')
+  @UsePipes(new ValidationPipe())
   async atualizar(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dados: Partial<Funcao>,
+    @Body() dados: FuncaoUpdateDto,
   ): Promise<[number]> {
     return this.service.atualizar(id, dados);
   }
@@ -51,7 +57,7 @@ export class FuncaoController {
       await this.service.ativar(id);
       return { message: 'Função ativada com sucesso' };
     } catch (error) {
-      throw new Error('Erro ao ativar Função');
+      throw new Error(error.message);
     }
   }
 
@@ -61,7 +67,7 @@ export class FuncaoController {
       await this.service.desativar(id);
       return { message: 'Função desativada com sucesso' };
     } catch (error) {
-      throw new Error('Erro ao desativar Função');
+      throw new Error(error.message);
     }
   }
 }

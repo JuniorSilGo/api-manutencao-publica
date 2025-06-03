@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Funcao } from './funcao.model';
+import { FuncaoDto } from './dto/funcao.dto';
+import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 
 @Injectable()
 export class FuncaoRepository {
@@ -17,15 +19,15 @@ export class FuncaoRepository {
     return this.funcaoModel.findByPk(id_funcao);
   }
 
-  async create(dados: Partial<Funcao>): Promise<Funcao> {
-    return this.funcaoModel.create(dados);
+  async create(dados: FuncaoDto): Promise<Funcao> {
+    return this.funcaoModel.create(dados as any);
   }
 
   async update(
     id_funcao: number,
-    dados: Partial<Funcao>,
+    dados: FuncaoUpdateDto,
   ): Promise<[number]> {
-    return this.funcaoModel.update(dados, { where: { id_funcao } });
+    return this.funcaoModel.update(dados as any, { where: { id_funcao } });
   }
 
   async destroy(id_funcao: number): Promise<number> {
@@ -33,10 +35,10 @@ export class FuncaoRepository {
   }
 
   async disable(id_funcao: number): Promise<[number]> {
-    return this.funcaoModel.update( { ativo: 0 }, { where: { id_funcao } } );
+    return this.funcaoModel.update({ ativo: 0 }, { where: { id_funcao } });
   }
 
   async enable(id_funcao: number): Promise<[number]> {
-    return this.funcaoModel.update( { ativo: 1 }, { where: { id_funcao } } );
+    return this.funcaoModel.update({ ativo: 1 }, { where: { id_funcao } });
   }
 }
