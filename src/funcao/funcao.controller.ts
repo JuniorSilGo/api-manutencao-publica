@@ -14,10 +14,16 @@ import { FuncaoService } from './funcao.service';
 import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
 import { FuncaoUpdateDto } from './dto/funcao-update.dto';
+import { FuncionarioService } from '../funcionario/funcionario.service';
+import { Funcionario } from '../funcionario/funcionario.model';
+import { FuncaoComFuncionariosDto } from './dto/funcao-com-funcionarios.dto';
+
 
 @Controller('funcoes')
 export class FuncaoController {
-  constructor(private readonly service: FuncaoService) {}
+  constructor(private readonly service: FuncaoService,
+              private readonly funcionarioService: FuncionarioService
+          ) {}
 
   @Get()
   async listar(): Promise<Funcao[]> {
@@ -70,4 +76,18 @@ export class FuncaoController {
       throw new Error(error.message);
     }
   }
+
+  @Get('com-funcionarios')
+  async listarTodasComFuncionarios(): Promise<FuncaoComFuncionariosDto[]> {
+    return this.service.listarFuncoesComFuncionarios(); // agora retorna o tipo certo
+  }
+
+  @Get(':id/funcionarios')
+  async listarFuncionarios(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Funcionario[]> {
+    return this.funcionarioService.listarPorFuncao(id);
+  }
+
+
 }

@@ -9,8 +9,8 @@ import { ServicoModule } from './servico/servico.module';
 @Module({
   imports: [
     SequelizeModule.forRoot(DBconfig),
-    ...Rotas,
-    ServicoModule, // modulos de entidades
+    ...Rotas, //nao entendi mas funcionou, bola pra frente
+    ServicoModule, 
   ],
 })
 export class AppModule {}

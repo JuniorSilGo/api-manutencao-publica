@@ -3,6 +3,7 @@ import { FuncaoRepository } from './funcao.repository';
 import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
 import { FuncaoUpdateDto } from './dto/funcao-update.dto';
+import { FuncaoComFuncionariosDto, FuncionarioSimplesDto } from './dto/funcao-com-funcionarios.dto';
 
 @Injectable()
 export class FuncaoService {
@@ -28,7 +29,7 @@ export class FuncaoService {
     return this.repository.destroy(id);
   }
 
-  async ativar(id: number) {
+  async ativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta ativado, só ativa quando esta desativado 
     const funcao = await this.repository.getOne(id);
     if (!funcao) throw new Error('Função não encontrada!');
     if (funcao.dataValues.ativo == 1)
@@ -36,11 +37,26 @@ export class FuncaoService {
     return this.repository.enable(id);
   }
 
-  async desativar(id: number) {
+  async desativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta desativado, só desativa quando esta ativado 
     const funcao = await this.repository.getOne(id);
     if (!funcao) throw new Error('Função não encontrada!');
     if (funcao.dataValues.ativo == 0)
       throw new Error('Função já está desativada!');
     return this.repository.disable(id);
   }
+
+  async listarFuncoesComFuncionarios(): Promise<FuncaoComFuncionariosDto[]> {
+    const funcoes = await this.repository.getAllWithFuncionarios(); // <- método certo
+
+    return funcoes.map((f) => ({
+      id_funcao: f.id_funcao,
+      funcao: f.funcao ?? '',
+      setor: f.setor ?? '',
+      funcionarios: f.funcionarios?.map((func) => ({
+        id: func.id_funcionario,
+        nome: func.nome ?? '',
+      })) ?? [],
+    }));
+  }
+
 }

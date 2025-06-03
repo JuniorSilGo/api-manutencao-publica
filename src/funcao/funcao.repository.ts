@@ -41,4 +41,16 @@ export class FuncaoRepository {
   async enable(id_funcao: number): Promise<[number]> {
     return this.funcaoModel.update({ ativo: 1 }, { where: { id_funcao } });
   }
+
+  async getAllWithFuncionarios(): Promise<Funcao[]> {
+    return this.funcaoModel.findAll({
+      include: {
+        association: 'funcionarios',
+        attributes: ['id_funcionario', 'nome'],
+        where: { ativo: 1 },
+        required: false,
+      },
+    });
+  }
+
 }

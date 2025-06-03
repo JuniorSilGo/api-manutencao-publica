@@ -1,4 +1,3 @@
-// funcionario-update.dto.ts
 import { IsString, IsEmail, IsInt, IsOptional, IsIn } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
