@@ -43,4 +43,11 @@ export class FuncionarioRepository {
   async enable(id_funcionario: number): Promise<[number]> {
     return this.funcionarioModel.update({ ativo: 1 }, { where: { id_funcionario } });
   }
+
+  async getByFuncao(id_funcao: number): Promise<Funcionario[]> {
+    return this.funcionarioModel.findAll({
+      where: { id_funcao },
+    });
+  }
+
 }

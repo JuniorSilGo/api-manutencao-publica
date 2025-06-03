@@ -5,7 +5,9 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  HasMany,
 } from 'sequelize-typescript';
+import { Funcionario } from '../funcionario/funcionario.model';
 
 @Table({
   tableName: 'funcoes',
@@ -25,4 +27,7 @@ export class Funcao extends Model {
 
   @Column({ type: DataType.INTEGER, defaultValue: 1 })
   ativo!: number;
+
+  @HasMany(() => Funcionario)
+  funcionarios?: Funcionario[];
 }
