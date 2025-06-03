@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { FuncaoRepository } from './funcao.repository';
 import { Funcao } from './funcao.model';
+import { FuncaoDto } from './dto/funcao.dto';
+import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 
 @Injectable()
 export class FuncaoService {
@@ -14,11 +16,11 @@ export class FuncaoService {
     return this.repository.getOne(id);
   }
 
-  async criar(dados: Partial<Funcao>): Promise<Funcao> {
+  async criar(dados: FuncaoDto): Promise<Funcao> {
     return this.repository.create(dados);
   }
 
-  async atualizar(id: number, dados: Partial<Funcao>): Promise<[number]> {
+  async atualizar(id: number, dados: FuncaoUpdateDto): Promise<[number]> {
     return this.repository.update(id, dados);
   }
 
@@ -28,33 +30,17 @@ export class FuncaoService {
 
   async ativar(id: number) {
     const funcao = await this.repository.getOne(id);
-
-    if (!funcao) {
-      throw new Error('Função não encontrada!');
-    }
-    if (funcao.dataValues.ativo == 1) {
+    if (!funcao) throw new Error('Função não encontrada!');
+    if (funcao.dataValues.ativo == 1)
       throw new Error('Função já está ativada!');
-    }
-
-    // console.log(funcao);
-
     return this.repository.enable(id);
   }
 
   async desativar(id: number) {
     const funcao = await this.repository.getOne(id);
-    // console.log(funcao?.dataValues);
-
-    if (!funcao) {
-      throw new Error('Função não encontrada!');
-    }
-    if (funcao.dataValues.ativo == 0) {
+    if (!funcao) throw new Error('Função não encontrada!');
+    if (funcao.dataValues.ativo == 0)
       throw new Error('Função já está desativada!');
-    }
-
-
     return this.repository.disable(id);
   }
-
-  
 }

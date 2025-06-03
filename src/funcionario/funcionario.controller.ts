@@ -7,9 +7,13 @@ import {
   Param,
   Body,
   ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FuncionarioService } from './funcionario.service';
 import { Funcionario } from './funcionario.model';
+import { FuncionarioDto } from './dto/funcionario.dto';
+import { FuncionarioUpdateDto } from './dto/funcionario-update.dto';
 
 @Controller('funcionarios')
 export class FuncionarioController {
@@ -28,16 +32,18 @@ export class FuncionarioController {
   }
 
   @Post()
-  async criar(@Body() dados: Partial<Funcionario>): Promise<Funcionario> {
+  @UsePipes(new ValidationPipe())
+  async criar(@Body() dados: FuncionarioDto): Promise<Funcionario> {
     return this.service.criar(dados);
   }
 
   @Put(':id')
+  @UsePipes(new ValidationPipe())
   async atualizar(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dados: Partial<Funcionario>,
+    @Body() dados: FuncionarioUpdateDto,
   ): Promise<[number]> {
-    return this.service.atualizar(id, dados);
+    return this.service.atualizar(id, dados as any);
   }
 
   @Delete(':id')
@@ -51,7 +57,7 @@ export class FuncionarioController {
       await this.service.ativar(id);
       return { message: 'Funcionário ativado com sucesso' };
     } catch (error) {
-      throw new Error('Erro ao ativar funcionário');
+      throw new Error(error.message);
     }
   }
 
@@ -61,7 +67,7 @@ export class FuncionarioController {
       await this.service.desativar(id);
       return { message: 'Funcionário desativado com sucesso' };
     } catch (error) {
-      throw new Error('Erro ao desativar funcionário');
+      throw new Error(error.message);
     }
   }
 }
