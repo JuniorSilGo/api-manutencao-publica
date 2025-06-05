@@ -56,4 +56,20 @@ export class FuncionarioService {
     return this.repository.getByFuncao(id_funcao);
   }
 
+  async atualizarFuncao(id_funcionario: number, id_funcao: number): Promise<Funcionario> {
+    const funcao = await this.funcaoRepository.getOne(id_funcao);
+    if (!funcao) {
+      throw new Error(`Função com ID ${id_funcao} não existe`);
+    }
+
+    await this.repository.update(id_funcionario, { id_funcao });
+
+    const funcionarioAtualizado = await this.repository.getOne(id_funcionario);
+
+    if (!funcionarioAtualizado) {
+      throw new Error('Funcionário não encontrado após atualização');
+    }
+
+    return funcionarioAtualizado;
+  }
 }

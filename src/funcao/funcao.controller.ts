@@ -17,8 +17,9 @@ import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 import { FuncionarioService } from '../funcionario/funcionario.service';
 import { Funcionario } from '../funcionario/funcionario.model';
 import { FuncaoComFuncionariosDto } from './dto/funcao-com-funcionarios.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-
+@ApiTags('Função')
 @Controller('funcoes')
 export class FuncaoController {
   constructor(private readonly service: FuncaoService,
@@ -26,11 +27,13 @@ export class FuncaoController {
           ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Lista todas as funções.' })
   async listar(): Promise<Funcao[]> {
     return this.service.listar();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Lista uma função pelo ID.' })
   async visualizar(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Funcao | null> {
@@ -38,12 +41,14 @@ export class FuncaoController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Cria uma nova função.' })
   @UsePipes(new ValidationPipe())
   async criar(@Body() dados: FuncaoDto): Promise<Funcao> {
     return this.service.criar(dados);
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Atualiza uma função pelo ID.' })
   @UsePipes(new ValidationPipe())
   async atualizar(
     @Param('id', ParseIntPipe) id: number,
@@ -53,11 +58,13 @@ export class FuncaoController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Deleta uma função pelo ID.' })
   async deletar(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.service.deletar(id);
   }
 
   @Get(':id/ativar')
+  @ApiOperation({ summary: 'Ativa uma função pelo ID.' })
   async ativar(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.service.ativar(id);
@@ -68,6 +75,7 @@ export class FuncaoController {
   }
 
   @Get(':id/desativar')
+  @ApiOperation({ summary: 'Desativa uma função pelo ID.' })
   async desativar(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.service.desativar(id);
@@ -77,17 +85,24 @@ export class FuncaoController {
     }
   }
 
-  @Get('com-funcionarios')
+  @Get('listar/funcionarios')
+  @ApiOperation({ summary: 'Lista todos of funcionários dentro de cada função.' })
   async listarTodasComFuncionarios(): Promise<FuncaoComFuncionariosDto[]> {
-    return this.service.listarFuncoesComFuncionarios(); // agora retorna o tipo certo
+    // console.log('ENTROU /funcoes/com-funcionarios')
+    return this.service.listarFuncoesComFuncionarios();
   }
 
   @Get(':id/funcionarios')
+  @ApiOperation({ summary: 'Lista todos of funcionários dentro de uma função pelo ID.' })
   async listarFuncionarios(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Funcionario[]> {
+    // console.log('ENTROU  /funcoes/ID/funcionarios')
     return this.funcionarioService.listarPorFuncao(id);
   }
 
-
+//   @Get('debug/teste')
+//   async rotaTeste(): Promise<string> {
+//     return 'rota achada';
+//   }
 }
