@@ -55,6 +55,4 @@ export class FuncionarioService {
 
     return this.repository.disable(id);
   }
-
-  
 }
