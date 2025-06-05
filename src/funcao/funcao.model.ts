@@ -1,12 +1,4 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  PrimaryKey,
-  AutoIncrement,
-  HasMany,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
 import { Funcionario } from '../funcionario/funcionario.model';
 
 @Table({
@@ -20,14 +12,14 @@ export class Funcao extends Model {
   id_funcao: number;
 
   @Column({ type: DataType.STRING })
-  funcao?: string;
+  funcao!: string;
 
   @Column({ type: DataType.STRING })
-  setor?: string;
+  setor!: string;
 
   @Column({ type: DataType.INTEGER, defaultValue: 1 })
   ativo!: number;
 
-  @HasMany(() => Funcionario)
+  @HasMany(() => Funcionario, { foreignKey: 'id_funcao', as: 'funcionarios' })
   funcionarios?: Funcionario[];
 }

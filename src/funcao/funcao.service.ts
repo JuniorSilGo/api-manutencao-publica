@@ -53,7 +53,7 @@ export class FuncaoService {
       funcao: f.funcao ?? '',
       setor: f.setor ?? '',
       funcionarios: f.funcionarios?.map((func) => ({
-        id: func.id_funcionario,
+        id: func.id_funcionario ?? 0,
         nome: func.nome ?? '',
       })) ?? [],
     }));

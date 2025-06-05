@@ -3,12 +3,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
 import { FuncaoUpdateDto } from './dto/funcao-update.dto';
+import { Funcionario } from '../funcionario/funcionario.model';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class FuncaoRepository {
   constructor(
     @InjectModel(Funcao)
     private readonly funcaoModel: typeof Funcao,
+    private readonly sequelize: Sequelize,
   ) {}
 
   async getAll(): Promise<Funcao[]> {
@@ -42,15 +45,44 @@ export class FuncaoRepository {
     return this.funcaoModel.update({ ativo: 1 }, { where: { id_funcao } });
   }
 
-  async getAllWithFuncionarios(): Promise<Funcao[]> {
-    return this.funcaoModel.findAll({
-      include: {
-        association: 'funcionarios',
-        attributes: ['id_funcionario', 'nome'],
-        where: { ativo: 1 },
-        required: false,
-      },
-    });
-  }
+    // async getAllWithFuncionarios(): Promise<Funcao[]> {
+    //   return this.funcaoModel.findAll({
+    //     include: [
+    //       {
+    //         association: 'funcionarios', // <- usa o alias definido no @HasMany
+    //         attributes: ['id_funcionario', 'nome'],
+    //         where: { ativo: 1 },
+    //         required: false, // permite retornar função mesmo sem funcionário
+    //       },
+    //     ],
+    //   });
+    // }
 
+    /* DESISTO DE TENTAR RESOLVER USANDO O SEQUELIZE KKKKKKKKKK VOU PRO SQL BRUTO MESMO
+      JURO QUE EU TENTEI FAZER OS JOINS PELO SEQUELIZE MAS EU DESISTO
+    */
+
+  async getAllWithFuncionarios(): Promise<any[]> {
+    const [results] = await this.sequelize.query(`
+      SELECT f.id_funcao, 
+          f.funcao, 
+          f.setor,
+          json_agg(
+            json_build_object(
+              'id', fu.id_funcionario,
+              'nome', fu.nome
+            )
+          ) FILTER (WHERE fu.id_funcionario IS NOT NULL) AS funcionarios
+      FROM funcoes f
+        LEFT JOIN funcionarios fu 
+          ON fu.id_funcao = f.id_funcao 
+          AND fu.ativo = 1
+      GROUP BY f.id_funcao
+        , f.funcao
+        , f.setor
+      ORDER BY 1
+    `);
+
+    return results;
+  } /* BEM MELHOR E FUNCIONANDO !!!!! */
 }
