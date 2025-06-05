@@ -4,9 +4,13 @@ import { Funcionario } from './funcionario.model';
 import { FuncionarioDto } from './dto/funcionario.dto';
 import { FuncionarioUpdateDto } from './dto/funcionario-update.dto';
 import { AtualizarIdFuncaoDto } from './dto/funcionario-id-funcao.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth  } from '@nestjs/swagger';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Funcionário')
+@ApiBearerAuth() // Swagger
+@UseGuards(JwtAuthGuard)
 @Controller('funcionarios')
 export class FuncionarioController {
   constructor(private readonly service: FuncionarioService) {}
@@ -79,4 +83,10 @@ export class FuncionarioController {
     return this.service.atualizarFuncao(id, dados.id_funcao);
   }
   
+  // @UseGuards(JwtAuthGuard)
+  // @Get('funcionarios/exemplo-protegido')
+  // findProtected() {
+  //   return 'Acesso autorizado!';
+  // }
+
 }
