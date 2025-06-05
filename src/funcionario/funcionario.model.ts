@@ -1,11 +1,5 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  PrimaryKey,
-  AutoIncrement,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Funcao } from '../funcao/funcao.model';
 
 @Table({
   tableName: 'funcionarios',
@@ -18,13 +12,17 @@ export class Funcionario extends Model {
   id_funcionario: number;
 
   @Column({ type: DataType.STRING })
-  nome?: string;
+  nome!: string;
 
   @Column({ type: DataType.STRING })
-  email?: string;
+  email!: string;
 
+  @ForeignKey(() => Funcao)
   @Column({ type: DataType.INTEGER })
   id_funcao?: number;
+
+  @BelongsTo(() => Funcao, { foreignKey: 'id_funcao', as: 'funcao' })
+  funcao?: Funcao;
 
   @Column({ type: DataType.INTEGER, defaultValue: 1 })
   ativo!: number;
