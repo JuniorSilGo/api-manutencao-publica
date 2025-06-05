@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-  ParseIntPipe,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import {  Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe } from '@nestjs/common';
 import { FuncaoService } from './funcao.service';
 import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
@@ -17,9 +6,13 @@ import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 import { FuncionarioService } from '../funcionario/funcionario.service';
 import { Funcionario } from '../funcionario/funcionario.model';
 import { FuncaoComFuncionariosDto } from './dto/funcao-com-funcionarios.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse,ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Função')
+@ApiBearerAuth() // Swagger
+@UseGuards(JwtAuthGuard)
 @Controller('funcoes')
 export class FuncaoController {
   constructor(private readonly service: FuncaoService,
