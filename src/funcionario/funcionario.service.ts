@@ -64,7 +64,6 @@ export class FuncionarioService {
 
     await this.repository.update(id_funcionario, { id_funcao });
 
-    return this.repository.disable(id);
     const funcionarioAtualizado = await this.repository.getOne(id_funcionario);
 
     if (!funcionarioAtualizado) {
@@ -73,4 +72,5 @@ export class FuncionarioService {
 
     return funcionarioAtualizado;
   }
+
 }
