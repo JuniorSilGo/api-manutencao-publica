@@ -1,10 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { FuncaoRepository } from './funcao.repository';
 import { Funcao } from './funcao.model';
+import { FuncaoDto } from './dto/funcao.dto';
+import { FuncaoUpdateDto } from './dto/funcao-update.dto';
+import { FuncaoComFuncionariosDto, FuncionarioSimplesDto } from './dto/funcao-com-funcionarios.dto';
+import { ServicoRepository } from '../servico/servico.repository';
+import { Servico } from '../servico/servico.model';
 
 @Injectable()
 export class FuncaoService {
-  constructor(private readonly repository: FuncaoRepository) {}
+  constructor(
+    private readonly repository: FuncaoRepository,
+    private readonly servicoRepository: ServicoRepository
+  ) {}
 
   async listar(): Promise<Funcao[]> {
     return this.repository.getAll();
@@ -14,11 +22,11 @@ export class FuncaoService {
     return this.repository.getOne(id);
   }
 
-  async criar(dados: Partial<Funcao>): Promise<Funcao> {
+  async criar(dados: FuncaoDto): Promise<Funcao> {
     return this.repository.create(dados);
   }
 
-  async atualizar(id: number, dados: Partial<Funcao>): Promise<[number]> {
+  async atualizar(id: number, dados: FuncaoUpdateDto): Promise<[number]> {
     return this.repository.update(id, dados);
   }
 
@@ -26,35 +34,39 @@ export class FuncaoService {
     return this.repository.destroy(id);
   }
 
-  async ativar(id: number) {
+  async ativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta ativado, só ativa quando esta desativado 
     const funcao = await this.repository.getOne(id);
-
-    if (!funcao) {
-      throw new Error('Função não encontrada!');
-    }
-    if (funcao.dataValues.ativo == 1) {
+    if (!funcao) throw new Error('Função não encontrada!');
+    if (funcao.dataValues.ativo == 1)
       throw new Error('Função já está ativada!');
-    }
-
-    // console.log(funcao);
-
     return this.repository.enable(id);
   }
 
-  async desativar(id: number) {
+  async desativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta desativado, só desativa quando esta ativado 
     const funcao = await this.repository.getOne(id);
-    // console.log(funcao?.dataValues);
-
-    if (!funcao) {
-      throw new Error('Função não encontrada!');
-    }
-    if (funcao.dataValues.ativo == 0) {
+    if (!funcao) throw new Error('Função não encontrada!');
+    if (funcao.dataValues.ativo == 0)
       throw new Error('Função já está desativada!');
-    }
-
-
     return this.repository.disable(id);
   }
 
-  
+  async listarFuncoesComFuncionarios(): Promise<FuncaoComFuncionariosDto[]> {
+    const funcoes = await this.repository.getAllWithFuncionarios(); // <- método certo
+
+    return funcoes.map((f) => ({
+      id_funcao: f.id_funcao,
+      funcao: f.funcao ?? '',
+      setor: f.setor ?? '',
+      funcionarios: f.funcionarios?.map((func) => ({
+        id: func.id_funcionario ?? 0,
+        nome: func.nome ?? '',
+      })) ?? [],
+    }));
+  }
+
+async listarServicos(id_funcao: number): Promise<Servico[]> {
+    return this.servicoRepository.listarPorFuncao(id_funcao);
+  }
+
+
 }

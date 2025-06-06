@@ -5,12 +5,16 @@ import { DBconfig } from './database/sequelize.config';
 
 import { Rotas } from './routes.module';
 import { ServicoModule } from './servico/servico.module';
+import { EquipamentoModule } from './equipamento/equipamento.module';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
     SequelizeModule.forRoot(DBconfig),
     ...Rotas,
-    ServicoModule, // modulos de entidades
+    ServicoModule,
+    EquipamentoModule,
   ],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
