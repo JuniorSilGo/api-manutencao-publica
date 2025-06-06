@@ -4,12 +4,15 @@ import { Funcionario } from './funcionario.model';
 import { FuncaoRepository } from '../funcao/funcao.repository';
 import { FuncionarioDto } from './dto/funcionario.dto';
 import { FuncionarioUpdateDto } from './dto/funcionario-update.dto';
+import { ServicoRepository } from '../servico/servico.repository'; 
+import { Servico } from '../servico/servico.model'; 
 
 @Injectable()
 export class FuncionarioService {
   constructor(
     private readonly repository: FuncionarioRepository,
     private readonly funcaoRepository: FuncaoRepository,
+    private readonly servicoRepository: ServicoRepository, //  crude junior
   ) {}
 
   async listar(): Promise<Funcionario[]> {
@@ -20,7 +23,7 @@ export class FuncionarioService {
     return this.repository.getOne(id);
   }
 
-  async criar(dados: FuncionarioDto): Promise<Funcionario> {  //REGRA DE NEGOCIO: verifica se existe funcao -> Dependencia funcional
+  async criar(dados: FuncionarioDto): Promise<Funcionario> {
     const funcao = await this.funcaoRepository.getOne(dados.id_funcao);
     if (!funcao) {
       throw new Error(`Função com ID ${dados.id_funcao} não encontrada`);
@@ -36,7 +39,7 @@ export class FuncionarioService {
     return this.repository.destroy(id);
   }
 
-  async ativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta ativado, só ativa quando esta desativado 
+  async ativar(id: number) {
     const funcionario = await this.repository.getOne(id);
     if (!funcionario) throw new Error('Funcionário não encontrado!');
     if (funcionario.dataValues.ativo == 1)
@@ -44,7 +47,7 @@ export class FuncionarioService {
     return this.repository.enable(id);
   }
 
-  async desativar(id: number) { //REGRA DE NEGOCIO: verifica se o cadastro já esta desativado, só desativa quando esta ativado 
+  async desativar(id: number) {
     const funcionario = await this.repository.getOne(id);
     if (!funcionario) throw new Error('Funcionário não encontrado!');
     if (funcionario.dataValues.ativo == 0)
@@ -56,7 +59,10 @@ export class FuncionarioService {
     return this.repository.getByFuncao(id_funcao);
   }
 
-  async atualizarFuncao(id_funcionario: number, id_funcao: number): Promise<Funcionario> {
+  async atualizarFuncao(
+    id_funcionario: number,
+    id_funcao: number,
+  ): Promise<Funcionario> {
     const funcao = await this.funcaoRepository.getOne(id_funcao);
     if (!funcao) {
       throw new Error(`Função com ID ${id_funcao} não existe`);
@@ -73,4 +79,7 @@ export class FuncionarioService {
     return funcionarioAtualizado;
   }
 
+  async listarServicos(id_funcionario: number): Promise<Servico[]> {
+    return this.servicoRepository.listarPorFuncionario(id_funcionario);
+  }
 }

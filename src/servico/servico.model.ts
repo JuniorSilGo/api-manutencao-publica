@@ -9,6 +9,8 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Manutencao } from 'src/manutencao/manutencao.model';
+import { Funcionario } from 'src/funcionario/funcionario.model';
+import { Funcao } from 'src/funcao/funcao.model';
 
 @Table({
   tableName: 'servicos',
@@ -35,8 +37,22 @@ export class Servico extends Model {
   @Column({ type: DataType.STRING })
   servico: string;
 
+  @ForeignKey(() => Funcionario)
+  @Column({ type: DataType.INTEGER })
+  id_funcionario: number; // rafa passou aqui
+
+  @BelongsTo(() => Funcionario)
+  funcionario: Funcionario;
+
+  @ForeignKey(() => Funcao)
+  @Column({ type: DataType.INTEGER })
+  id_funcao: number; // rafa passou aqui
+
+  @BelongsTo(() => Funcao)
+  funcao: Funcao;
+
   @ForeignKey(() => Manutencao)
-  @Column
+  @Column({ type: DataType.INTEGER })
   manutencaoId: number;
 
   @BelongsTo(() => Manutencao)

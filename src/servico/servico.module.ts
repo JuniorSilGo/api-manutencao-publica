@@ -9,5 +9,6 @@ import { ServicoRepository } from './servico.repository';
   imports: [SequelizeModule.forFeature([Servico])],
   controllers: [ServicoController],
   providers: [ServicoService, ServicoRepository],
+  exports: [ServicoRepository], //Rafa Passou aqui
 })
 export class ServicoModule {}

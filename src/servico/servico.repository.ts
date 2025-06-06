@@ -13,8 +13,8 @@ export class ServicoRepository {
     return this.servicoModel.findAll();
   }
 
-  async getOne(id_funcionario: number): Promise<Servico | null> {
-    return this.servicoModel.findByPk(id_funcionario);
+  async getOne(id_servico: number): Promise<Servico | null> {
+    return this.servicoModel.findByPk(id_servico);
   }
 
   async create(dados: Partial<Servico>): Promise<Servico> {
@@ -27,5 +27,17 @@ export class ServicoRepository {
 
   async destroy(id_servico: number): Promise<number> {
     return this.servicoModel.destroy({ where: { id_servico } });
+  }
+
+  async listarPorFuncionario(id_funcionario: number): Promise<Servico[]> {
+    return this.servicoModel.findAll({
+      where: { id_funcionario }, //rafa passou aqui
+    });
+  }
+
+  async listarPorFuncao(id_funcao: number): Promise<Servico[]> {
+    return this.servicoModel.findAll({
+      where: { id_funcao }, //rafa passou aqui
+    });
   }
 }

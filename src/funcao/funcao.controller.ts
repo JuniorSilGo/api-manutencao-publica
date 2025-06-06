@@ -98,4 +98,11 @@ export class FuncaoController {
 //   async rotaTeste(): Promise<string> {
 //     return 'rota achada';
 //   }
+
+  @Get(':id/servicos')
+  @ApiOperation({ summary: 'Lista todos of serviços atribuidos a uma função pelo ID.' })
+  async listarServicos(@Param('id', ParseIntPipe) id: number) {
+    return this.service.listarServicos(id);
+  }
+  
 }

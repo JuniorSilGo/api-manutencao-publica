@@ -5,11 +5,13 @@ import { FuncionarioController } from './funcionario.controller';
 import { FuncionarioService } from './funcionario.service';
 import { FuncionarioRepository } from './funcionario.repository';
 import { FuncaoModule } from '../funcao/funcao.module';
+import { ServicoModule } from '../servico/servico.module'; // Importação do ServicoModule
 
 @Module({
   imports: [
     SequelizeModule.forFeature([Funcionario]),
-    forwardRef(() => FuncaoModule), // Dep Ciruclar
+    forwardRef(() => FuncaoModule), // dep circular
+    forwardRef(() => ServicoModule), // crude junior
   ],
   controllers: [FuncionarioController],
   providers: [FuncionarioService, FuncionarioRepository],
