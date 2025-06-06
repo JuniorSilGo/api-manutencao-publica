@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsNotEmpty } from '@nestjs/class-validator';
+import { IsString, IsEmail, IsNotEmpty, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateServicoDto {
@@ -12,15 +12,15 @@ export class CreateServicoDto {
 
   @ApiProperty({
     example: 'Tv. Nave Mãe - Jardim da Conquista - SP',
-    description: 'Endereço para qual o serviço foi solicito.',
+    description: 'Endereço para o qual o serviço foi solicitado.',
   })
   @IsNotEmpty()
   @IsString()
-  endereço: string;
+  endereco: string; 
 
   @ApiProperty({
     example: '08345-000',
-    description: 'CEP para qual o serviço foi solicito.',
+    description: 'CEP para o qual o serviço foi solicitado.',
   })
   @IsNotEmpty()
   @IsString()
@@ -28,7 +28,7 @@ export class CreateServicoDto {
 
   @ApiProperty({
     example: 'usuario@email.com.br',
-    description: 'E-mail do usuaário que criou o pedido de serviço.',
+    description: 'E-mail do usuário que criou o pedido de serviço.',
   })
   @IsEmail()
   @IsNotEmpty()
@@ -40,4 +40,20 @@ export class CreateServicoDto {
   })
   @IsString()
   servico: string;
+
+  @ApiProperty({
+    example: 1,
+    description: 'ID do funcionário.',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  id_funcionario: number;  //RAFA PASSOU AQUI
+
+  @ApiProperty({
+    example: 2,
+    description: 'ID da função.',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  id_funcao: number; //RAFA PASSOU AQUI
 }

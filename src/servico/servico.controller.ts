@@ -18,7 +18,10 @@ import {
 } from '@nestjs/swagger';
 import { CreateServicoDto } from './DTO/create-servico.dto';
 import { UpdateServicoDto } from './DTO/update-servico.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('Serviços')
 @ApiExtraModels(CreateServicoDto, UpdateServicoDto)
 @Controller('servico')
@@ -41,7 +44,7 @@ export class ServicoController {
   }
 
   @ApiOperation({ summary: 'Cadastra um novo serviço na base de dados.' })
-  @ApiResponse({ status: 201, description: 'Serviço criado com sucesso.' }) // <--- mudar depois para o real retorno depois de adiconar as regras de negócio.
+  @ApiResponse({ status: 201, description: 'Serviço criado com sucesso.' }) 
   @Post()
   async criar(@Body() CreateServicoDto: CreateServicoDto): Promise<Servico> {
     return this.service.criar(CreateServicoDto);

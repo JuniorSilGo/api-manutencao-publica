@@ -4,10 +4,15 @@ import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
 import { FuncaoUpdateDto } from './dto/funcao-update.dto';
 import { FuncaoComFuncionariosDto, FuncionarioSimplesDto } from './dto/funcao-com-funcionarios.dto';
+import { ServicoRepository } from '../servico/servico.repository';
+import { Servico } from '../servico/servico.model';
 
 @Injectable()
 export class FuncaoService {
-  constructor(private readonly repository: FuncaoRepository) {}
+  constructor(
+    private readonly repository: FuncaoRepository,
+    private readonly servicoRepository: ServicoRepository
+  ) {}
 
   async listar(): Promise<Funcao[]> {
     return this.repository.getAll();
@@ -58,5 +63,10 @@ export class FuncaoService {
       })) ?? [],
     }));
   }
+
+async listarServicos(id_funcao: number): Promise<Servico[]> {
+    return this.servicoRepository.listarPorFuncao(id_funcao);
+  }
+
 
 }

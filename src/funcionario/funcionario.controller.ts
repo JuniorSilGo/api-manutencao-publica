@@ -1,17 +1,35 @@
-import {   Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe,Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { FuncionarioService } from './funcionario.service';
 import { Funcionario } from './funcionario.model';
 import { FuncionarioDto } from './dto/funcionario.dto';
 import { FuncionarioUpdateDto } from './dto/funcionario-update.dto';
 import { AtualizarIdFuncaoDto } from './dto/funcionario-id-funcao.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth  } from '@nestjs/swagger';
-import { UseGuards } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Funcionário')
 @ApiBearerAuth() // Swagger
 @UseGuards(JwtAuthGuard)
 @Controller('funcionarios')
+
 export class FuncionarioController {
   constructor(private readonly service: FuncionarioService) {}
 
@@ -40,6 +58,7 @@ export class FuncionarioController {
   @ApiOperation({ summary: 'Atualiza um funcionário pelo ID.' })
   @UsePipes(new ValidationPipe())
   async atualizar(
+
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: FuncionarioUpdateDto,
   ): Promise<[number]> {
@@ -56,6 +75,7 @@ export class FuncionarioController {
   @ApiOperation({ summary: 'Ativa um funcionário pelo ID.' })
   async ativar(@Param('id', ParseIntPipe) id: number) {
     try {
+
       await this.service.ativar(id);
       return { message: 'Funcionário ativado com sucesso' };
     } catch (error) {
@@ -68,25 +88,35 @@ export class FuncionarioController {
   async desativar(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.service.desativar(id);
+
       return { message: 'Funcionário desativado com sucesso' };
     } catch (error) {
+
       throw new Error(error.message);
     }
   }
 
   @Patch(':id/funcao')
-  @ApiOperation({ summary: 'Atualiza o campo ID_FUNCAO de um funcionário pelo ID.' })
+  @ApiOperation({
+    summary: 'Atualiza o campo ID_FUNCAO de um funcionário pelo ID.',
+  })
+
   async atualizarFuncao(
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: AtualizarIdFuncaoDto,
   ) {
     return this.service.atualizarFuncao(id, dados.id_funcao);
   }
-  
-  // @UseGuards(JwtAuthGuard)
-  // @Get('funcionarios/exemplo-protegido')
+
+    // @Get('funcionarios/exemplo-protegido')
   // findProtected() {
   //   return 'Acesso autorizado!';
   // }
+
+  @Get(':id/servicos')
+  @ApiOperation({ summary: 'Lista todos of serviços atribuidos a um Funcionário pelo ID.' })
+  async listarServicos(@Param('id', ParseIntPipe) id: number) {
+    return this.service.listarServicos(id);
+  }
 
 }
