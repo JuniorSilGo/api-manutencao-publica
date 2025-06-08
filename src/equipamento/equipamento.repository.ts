@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Equipamento } from './equipamento.model';
+import { Funcionario } from '../funcionario/funcionario.model';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EquipamentoRepository {
@@ -9,26 +10,27 @@ export class EquipamentoRepository {
     private readonly equipamentoModel: typeof Equipamento,
   ) {}
 
-  async getAll(): Promise<Equipamento[]> {
-    return this.equipamentoModel.findAll();
+  async create(data: Partial<Equipamento>): Promise<Equipamento> {
+    return this.equipamentoModel.create(data as Equipamento);
   }
 
-  async getOne(id_equipamento: number): Promise<Equipamento | null> {
-    return this.equipamentoModel.findByPk(id_equipamento);
+  async findAll(): Promise<Equipamento[]> {
+    return this.equipamentoModel.findAll({
+      include: [{ model: Funcionario, as: 'responsavel' }],
+    });
   }
 
-  async create(dados: Partial<Equipamento>): Promise<Equipamento> {
-    return this.equipamentoModel.create(dados);
+  async findById(id: number): Promise<Equipamento | null> {
+    return this.equipamentoModel.findByPk(id, {
+      include: [{ model: Funcionario, as: 'responsavel' }],
+    });
   }
 
-  async update(
-    id_equipamento: number,
-    dados: Partial<Equipamento>,
-  ): Promise<[number]> {
-    return this.equipamentoModel.update(dados, { where: { id_equipamento } });
+  async update(id: number, data: Partial<Equipamento>): Promise<void> {
+    await this.equipamentoModel.update(data, { where: { id } });
   }
 
-  async destroy(id_equipamento: number): Promise<number> {
-    return this.equipamentoModel.destroy({ where: { id_equipamento } });
+  async remove(id: number): Promise<void> {
+    await this.equipamentoModel.destroy({ where: { id } });
   }
 }

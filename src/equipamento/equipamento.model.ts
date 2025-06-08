@@ -3,29 +3,39 @@ import {
   Column,
   Model,
   DataType,
-  PrimaryKey,
-  AutoIncrement,
+  ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
+import { Funcionario } from '../funcionario/funcionario.model';
 
-@Table({
-  tableName: 'equipamentos',
-  timestamps: true,
-})
-export class Equipamento extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column({ type: DataType.INTEGER })
-  id_equipamento: number;
+@Table({ tableName: 'equipamentos' })
+export class Equipamento extends Model<Equipamento> {
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  nome: string;
 
-  @Column({ type: DataType.STRING })
-  nome?: string;
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  tipo: string;
 
-  @Column({ type: DataType.STRING })
-  descricao?: string;
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: true,
+  })
+  ativo: boolean;
 
-  @Column({ type: DataType.STRING })
-  numero_serie?: string;
+  @ForeignKey(() => Funcionario)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+    field: 'id_responsavel',
+  })
+  id_responsavel: number;
 
-  @Column({ type: DataType.INTEGER, defaultValue: 1 })
-  ativo!: number;
+  @BelongsTo(() => Funcionario, 'id_responsavel')
+  responsavel: Funcionario;
 }

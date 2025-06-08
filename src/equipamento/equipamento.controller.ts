@@ -2,55 +2,50 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Patch,
-  Delete,
-  Param,
   Body,
+  Patch,
+  Param,
+  Delete,
   ParseIntPipe,
 } from '@nestjs/common';
 import { EquipamentoService } from './equipamento.service';
-import { Equipamento } from './equipamento.model';
+import { CreateEquipamentoDto } from './dto/create-equipamento.dto';
+import { UpdateEquipamentoDto } from './dto/update-equipamento.dto';
 
 @Controller('equipamentos')
 export class EquipamentoController {
-  constructor(private readonly service: EquipamentoService) {}
+  constructor(private readonly equipamentoService: EquipamentoService) {}
+
+  @Post()
+  create(@Body() createEquipamentoDto: CreateEquipamentoDto) {
+    return this.equipamentoService.create(createEquipamentoDto);
+  }
 
   @Get()
-  async listar(): Promise<Equipamento[]> {
-    return this.service.listar();
+  findAll() {
+    return this.equipamentoService.findAll(); // inclui `responsavel`
   }
 
   @Get(':id')
-  async visualizar(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Equipamento | null> {
-    return this.service.visualizar(id);
-  }
-
-  @Post()
-  async criar(@Body() dados: Partial<Equipamento>): Promise<Equipamento> {
-    return this.service.criar(dados);
-  }
-
-  @Put(':id')
-  async atualizar(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dados: Equipamento,
-  ): Promise<[number]> {
-    return this.service.atualizar(id, dados);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.equipamentoService.findOne(id); // inclui `responsavel`
   }
 
   @Patch(':id')
-  async atualizarParcial(
+  update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dados: Partial<Equipamento>,
-  ): Promise<[number]> {
-    return this.service.atualizar(id, dados);
+    @Body() updateEquipamentoDto: UpdateEquipamentoDto,
+  ) {
+    return this.equipamentoService.update(id, updateEquipamentoDto);
   }
 
   @Delete(':id')
-  async deletar(@Param('id', ParseIntPipe) id: number): Promise<number> {
-    return this.service.deletar(id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.equipamentoService.remove(id);
+  }
+
+  @Patch(':id/ativar')
+  toggleAtivo(@Param('id', ParseIntPipe) id: number) {
+    return this.equipamentoService.toggleAtivo(id);
   }
 }
