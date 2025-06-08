@@ -23,12 +23,12 @@ export class EquipamentoController {
 
   @Get()
   findAll() {
-    return this.equipamentoService.findAll(); // inclui `responsavel`
+    return this.equipamentoService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.equipamentoService.findOne(id); // inclui `responsavel`
+    return this.equipamentoService.findOne(id);
   }
 
   @Patch(':id')
@@ -47,5 +47,20 @@ export class EquipamentoController {
   @Patch(':id/ativar')
   toggleAtivo(@Param('id', ParseIntPipe) id: number) {
     return this.equipamentoService.toggleAtivo(id);
+  }
+
+  @Get('buscar/:termo')
+  buscarPorTermo(@Param('termo') termo: string) {
+    return this.equipamentoService.buscarPorTermo(termo);
+  }
+
+  @Get('com-falha')
+  listarComFalha() {
+    return this.equipamentoService.listarComFalha();
+  }
+
+  @Get('resumo')
+  resumo() {
+    return this.equipamentoService.gerarResumo();
   }
 }

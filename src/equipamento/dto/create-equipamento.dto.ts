@@ -1,17 +1,26 @@
-import { IsOptional, IsString, IsBoolean, IsInt } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateEquipamentoDto {
   @IsString()
   nome: string;
 
+  @IsOptional()
   @IsString()
-  descricao: string;
+  modelo?: string;
+
+  @IsOptional()
+  @IsString()
+  numeroSerie?: string;
 
   @IsOptional()
   @IsBoolean()
   ativo?: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  falha?: boolean;
+
+  @IsOptional()
   @IsInt()
-  id_responsavel?: number;
+  responsavelId?: number;
 }

@@ -8,19 +8,19 @@ import {
 } from 'sequelize-typescript';
 import { Funcionario } from '../funcionario/funcionario.model';
 
-@Table({ tableName: 'equipamentos' })
-export class Equipamento extends Model<Equipamento> {
+@Table({ timestamps: true, paranoid: true })
+export class Equipamento extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   nome: string;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  tipo: string;
+  @Column(DataType.STRING)
+  modelo: string;
+
+  @Column(DataType.STRING)
+  numeroSerie: string;
 
   @Column({
     type: DataType.BOOLEAN,
@@ -28,14 +28,19 @@ export class Equipamento extends Model<Equipamento> {
   })
   ativo: boolean;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  falha: boolean;
+
   @ForeignKey(() => Funcionario)
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
-    field: 'id_responsavel',
   })
-  id_responsavel: number;
+  responsavelId: number;
 
-  @BelongsTo(() => Funcionario, 'id_responsavel')
+  @BelongsTo(() => Funcionario, 'responsavelId')
   responsavel: Funcionario;
 }
