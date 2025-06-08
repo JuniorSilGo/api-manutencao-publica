@@ -49,6 +49,19 @@ export class LocalController {
   }
   //Fim endpoints de relacionamento
 
+  @Get('paginado')
+  findPaginado(@Query('pagina') pagina: string, @Query('tamanho') tamanho: string,) {
+    const page = Number(pagina) || 1;
+    const size = Number(tamanho) || 10;
+    const offset = (page - 1) * size;
+    return this.localService.findPaginado(offset, size);
+  }
+
+  @Get('busca-parcial')
+  findByNomeParcial(@Query('nome') nome: string) {
+    return this.localService.findByNomeParcial(nome);
+  }
+
   @Patch(':id_local')
   update(@Param('id_local') id_local: string, @Body() updateLocalDto: UpdateLocalDto) {
     return this.localService.update(+id_local, updateLocalDto);

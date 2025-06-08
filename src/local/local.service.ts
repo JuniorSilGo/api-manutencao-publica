@@ -4,6 +4,7 @@ import { Local } from './local.model';
 import { CreateLocalDto } from './dto/create-local.dto';
 import { UpdateLocalDto } from './dto/update-local.dto';
 import { Equipamento } from '../equipamento/equipamento.model';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class LocalService {
@@ -52,6 +53,20 @@ export class LocalService {
 
   async findByNome(nome: string): Promise<Local[]> {
     return this.localModel.findAll({ where: { nome } });
+  }
+
+  async findByNomeParcial(nome: string): Promise<Local[]> {
+    return this.localModel.findAll({
+      where: {
+        nome: {
+          [Op.iLike]: `%${nome}%`
+        }
+      }
+    });
+  }
+
+  async findPaginado(offset: number, limit: number): Promise<Local[]> {
+    return this.localModel.findAll({ offset, limit });
   }
 
   // --- Endpoints do Relacionamento ---
