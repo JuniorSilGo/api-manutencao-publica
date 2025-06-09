@@ -1,5 +1,17 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  ForeignKey,
+  BelongsTo,
+  BelongsToMany,
+} from 'sequelize-typescript';
 import { Funcao } from '../funcao/funcao.model';
+import { Manutencao } from 'src/manutencao/manutencao.model';
+import { ManutencaoFuncionario } from 'src/manutencao-funcionario/manutencao-funcionario.model';
 
 @Table({
   tableName: 'funcionarios',
@@ -26,4 +38,7 @@ export class Funcionario extends Model {
 
   @Column({ type: DataType.INTEGER, defaultValue: 1 })
   ativo!: number;
+
+  @BelongsToMany(() => Manutencao, () => ManutencaoFuncionario) // Precisei fazer uma adição aqui
+  manutencoes: Manutencao[];
 }

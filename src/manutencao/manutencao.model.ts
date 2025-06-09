@@ -6,9 +6,11 @@ import {
   PrimaryKey,
   Table,
   HasMany,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { Funcionario } from 'src/funcionario/funcionario.model';
 import { Servico } from 'src/servico/servico.model';
+import { ManutencaoFuncionario } from 'src/manutencao-funcionario/manutencao-funcionario.model';
 
 @Table({
   tableName: 'Manutenção',
@@ -18,11 +20,11 @@ export class Manutencao extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({ type: DataType.INTEGER })
-  id_manutencao: number;
+  manutencaoId: number;
+
+  @BelongsToMany(() => Funcionario, () => ManutencaoFuncionario)
+  equipe: Funcionario[];
 
   @HasMany(() => Servico)
   servicos: Servico[];
-
-  @Column({ type: DataType.STRING })
-  equipe: Funcionario[];
 }
