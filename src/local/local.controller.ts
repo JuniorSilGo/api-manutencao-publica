@@ -32,6 +32,36 @@ export class LocalController {
     return this.localService.findOne(+id_local);
   }
 
+  // --- ENDPOINT COM RELACIONAMENTO ---
+  @Get(':id_local/equipamentos')
+  listarEquipamentos(@Param('id_local') id_local: string) {
+    return this.localService.listarEquipamentos(+id_local);
+  }
+
+  @Post(':id_local/equipamentos')
+  criarEquipamentoNoLocal(@Param('id_local') id_local: string, @Body() dadosEquipamento: any,) {
+    return this.localService.criarEquipamentoNoLocal(+id_local, dadosEquipamento);
+  }
+
+  @Delete(':id_local/equipamentos/:id_equipamento')
+  removerEquipamentoDeLocal(@Param('id_local') id_local: string, @Param('id_equipamento') id_equipamento: string,) {
+    return this.localService.removerEquipamentoDeLocal(+id_local, +id_equipamento);
+  }
+  //Fim endpoints de relacionamento
+
+  @Get('paginado')
+  findPaginado(@Query('pagina') pagina: string, @Query('tamanho') tamanho: string,) {
+    const page = Number(pagina) || 1;
+    const size = Number(tamanho) || 10;
+    const offset = (page - 1) * size;
+    return this.localService.findPaginado(offset, size);
+  }
+
+  @Get('busca-parcial')
+  findByNomeParcial(@Query('nome') nome: string) {
+    return this.localService.findByNomeParcial(nome);
+  }
+
   @Patch(':id_local')
   update(@Param('id_local') id_local: string, @Body() updateLocalDto: UpdateLocalDto) {
     return this.localService.update(+id_local, updateLocalDto);
