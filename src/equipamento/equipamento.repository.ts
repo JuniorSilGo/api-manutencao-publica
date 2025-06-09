@@ -1,34 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Equipamento } from './equipamento.model';
+import { Funcionario } from '../funcionario/funcionario.model';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class EquipamentoRepository {
   constructor(
     @InjectModel(Equipamento)
-    private readonly equipamentoModel: typeof Equipamento,
+    private equipamentoModel: typeof Equipamento,
   ) {}
 
-  async getAll(): Promise<Equipamento[]> {
-    return this.equipamentoModel.findAll();
+  findAllWithRelations() {
+    return this.equipamentoModel.findAll({
+      include: [{ model: Funcionario, as: 'responsavel' }],
+    });
   }
 
-  async getOne(id_equipamento: number): Promise<Equipamento | null> {
-    return this.equipamentoModel.findByPk(id_equipamento);
+  findByIdWithRelations(id: number) {
+    return this.equipamentoModel.findByPk(id, {
+      include: [{ model: Funcionario, as: 'responsavel' }],
+    });
   }
 
-  async create(dados: Partial<Equipamento>): Promise<Equipamento> {
-    return this.equipamentoModel.create(dados);
-  }
-
-  async update(
-    id_equipamento: number,
-    dados: Partial<Equipamento>,
-  ): Promise<[number]> {
-    return this.equipamentoModel.update(dados, { where: { id_equipamento } });
-  }
-
-  async destroy(id_equipamento: number): Promise<number> {
-    return this.equipamentoModel.destroy({ where: { id_equipamento } });
+  buscarPorTermo(termo: string) {
+    return this.equipamentoModel.findAll({
+      where: {
+        [Op.or]: [
+          { nome: { [Op.iLike]: `%${termo}%` } },
+          { modelo: { [Op.iLike]: `%${termo}%` } },
+          { numeroSerie: { [Op.iLike]: `%${termo}%` } },
+        ],
+      },
+      include: [{ model: Funcionario, as: 'responsavel' }],
+    });
   }
 }
