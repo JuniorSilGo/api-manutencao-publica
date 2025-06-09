@@ -16,7 +16,7 @@ export class CreateServicoDto {
   })
   @IsNotEmpty()
   @IsString()
-  endereco: string; 
+  endereco: string;
 
   @ApiProperty({
     example: '08345-000',
@@ -47,7 +47,7 @@ export class CreateServicoDto {
   })
   @IsInt()
   @IsNotEmpty()
-  id_funcionario: number;  //RAFA PASSOU AQUI
+  id_funcionario: number; //RAFA PASSOU AQUI
 
   @ApiProperty({
     example: 2,

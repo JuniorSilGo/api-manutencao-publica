@@ -23,7 +23,7 @@ export class Servico extends Model {
   id_servico: number;
 
   @Column({ type: DataType.STRING })
-  usuario?: string;
+  usuario: string;
 
   @Column({ type: DataType.STRING })
   endereco: string;
