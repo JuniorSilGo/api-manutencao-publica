@@ -1,4 +1,4 @@
-import {  Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe } from '@nestjs/common';
+import {  Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe,Patch, Query} from '@nestjs/common';
 import { FuncaoService } from './funcao.service';
 import { Funcao } from './funcao.model';
 import { FuncaoDto } from './dto/funcao.dto';
@@ -11,7 +11,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Função')
-@ApiBearerAuth() // Swagger
+@ApiBearerAuth() 
 @UseGuards(JwtAuthGuard)
 @Controller('funcoes')
 export class FuncaoController {
@@ -21,9 +21,14 @@ export class FuncaoController {
 
   @Get()
   @ApiOperation({ summary: 'Lista todas as funções.' })
-  async listar(): Promise<Funcao[]> {
-    return this.service.listar();
-  }
+  async listar(
+    @Query('offset') offset = '0',
+    @Query('limit') limit = '10',
+    ) {
+      const parsedOffset = parseInt(offset);
+      const parsedLimit = parseInt(limit);
+      return this.service.listar(parsedOffset, parsedLimit);
+    }
 
   @Get(':id')
   @ApiOperation({ summary: 'Lista uma função pelo ID.' })

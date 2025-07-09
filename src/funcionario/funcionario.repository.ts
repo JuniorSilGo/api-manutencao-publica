@@ -11,8 +11,12 @@ export class FuncionarioRepository {
     private readonly funcionarioModel: typeof Funcionario,
   ) {}
 
-  async getAll(): Promise<Funcionario[]> {
-    return this.funcionarioModel.findAll();
+  async getAll(offset = 0, limit = 10): Promise<{ rows: Funcionario[]; count: number }> {
+    return this.funcionarioModel.findAndCountAll({
+      offset,
+      limit,
+      order: [['id_funcionario', 'ASC']],
+    });
   }
 
   async getOne(id_funcionario: number): Promise<Funcionario | null> {
@@ -49,5 +53,4 @@ export class FuncionarioRepository {
       where: { id_funcao },
     });
   }
-
 }

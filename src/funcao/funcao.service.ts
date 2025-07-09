@@ -9,8 +9,8 @@ import { FuncaoComFuncionariosDto, FuncionarioSimplesDto } from './dto/funcao-co
 export class FuncaoService {
   constructor(private readonly repository: FuncaoRepository) {}
 
-  async listar(): Promise<Funcao[]> {
-    return this.repository.getAll();
+  async listar(offset = 0, limit = 10) {
+    return this.repository.getAll(offset, limit);
   }
 
   async vizualisar(id: number): Promise<Funcao | null> {

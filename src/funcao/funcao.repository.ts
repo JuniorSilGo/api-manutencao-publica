@@ -14,8 +14,12 @@ export class FuncaoRepository {
     private readonly sequelize: Sequelize,
   ) {}
 
-  async getAll(): Promise<Funcao[]> {
-    return this.funcaoModel.findAll();
+  async getAll(offset = 0, limit = 10): Promise<{ rows: Funcao[]; count: number }> {
+    return this.funcaoModel.findAndCountAll({
+      offset,
+      limit,
+      order: [['id_funcao', 'ASC']],
+    });
   }
 
   async getOne(id_funcao: number): Promise<Funcao | null> {

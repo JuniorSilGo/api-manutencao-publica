@@ -1,38 +1,40 @@
-import {   Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe,Patch } from '@nestjs/common';
+import {  Controller,Get,Post,Put,Delete,Param,Body,ParseIntPipe,UsePipes,ValidationPipe,Patch, Query} from '@nestjs/common';
 import { FuncionarioService } from './funcionario.service';
-import { Funcionario } from './funcionario.model';
 import { FuncionarioDto } from './dto/funcionario.dto';
 import { FuncionarioUpdateDto } from './dto/funcionario-update.dto';
 import { AtualizarIdFuncaoDto } from './dto/funcionario-id-funcao.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth  } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Funcionário')
-@ApiBearerAuth() // Swagger
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('funcionarios')
 export class FuncionarioController {
   constructor(private readonly service: FuncionarioService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Lista todos os funcionários.' })
-  async listar(): Promise<Funcionario[]> {
-    return this.service.listar();
+  @ApiOperation({ summary: 'Lista todos os funcionários (paginado).' })
+  async listar(
+    @Query('offset') offset = '0',
+    @Query('limit') limit = '10',
+  ) {
+    const parsedOffset = parseInt(offset);
+    const parsedLimit = parseInt(limit);
+    return this.service.listar(parsedOffset, parsedLimit);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Lista um funcionário pelo ID.' })
-  async visualizar(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Funcionario | null> {
+  async visualizar(@Param('id', ParseIntPipe) id: number) {
     return this.service.vizualisar(id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo funcionário.' })
   @UsePipes(new ValidationPipe())
-  async criar(@Body() dados: FuncionarioDto): Promise<Funcionario> {
+  async criar(@Body() dados: FuncionarioDto) {
     return this.service.criar(dados);
   }
 
@@ -42,51 +44,36 @@ export class FuncionarioController {
   async atualizar(
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: FuncionarioUpdateDto,
-  ): Promise<[number]> {
-    return this.service.atualizar(id, dados as any);
+  ) {
+    return this.service.atualizar(id, dados);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Deleta um funcionário pelo ID.' })
-  async deletar(@Param('id', ParseIntPipe) id: number): Promise<number> {
+  async deletar(@Param('id', ParseIntPipe) id: number) {
     return this.service.deletar(id);
   }
 
   @Get(':id/ativar')
   @ApiOperation({ summary: 'Ativa um funcionário pelo ID.' })
   async ativar(@Param('id', ParseIntPipe) id: number) {
-    try {
-      await this.service.ativar(id);
-      return { message: 'Funcionário ativado com sucesso' };
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    return this.service.ativar(id);
   }
 
   @Get(':id/desativar')
   @ApiOperation({ summary: 'Desativa um funcionário pelo ID.' })
   async desativar(@Param('id', ParseIntPipe) id: number) {
-    try {
-      await this.service.desativar(id);
-      return { message: 'Funcionário desativado com sucesso' };
-    } catch (error) {
-      throw new Error(error.message);
-    }
+    return this.service.desativar(id);
   }
 
   @Patch(':id/funcao')
-  @ApiOperation({ summary: 'Atualiza o campo ID_FUNCAO de um funcionário pelo ID.' })
+  @ApiOperation({
+    summary: 'Atualiza o campo ID_FUNCAO de um funcionário pelo ID.',
+  })
   async atualizarFuncao(
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: AtualizarIdFuncaoDto,
   ) {
     return this.service.atualizarFuncao(id, dados.id_funcao);
   }
-  
-  // @UseGuards(JwtAuthGuard)
-  // @Get('funcionarios/exemplo-protegido')
-  // findProtected() {
-  //   return 'Acesso autorizado!';
-  // }
-
 }
