@@ -7,9 +7,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Local } from '../local/local.model'; //Eike: fazendo relacionamento
-import { ForeignKey, BelongsTo } from 'sequelize-typescript'; //Eike: fazendo relacionamento(colocando FK)
 import { Funcionario } from '../funcionario/funcionario.model';
-import { Local } from '../local/local.model'; //Eike: fazendo relacionamento
 
 @Table({ timestamps: true, paranoid: true })
 export class Equipamento extends Model {
@@ -33,9 +31,6 @@ export class Equipamento extends Model {
 
   @Column({ type: DataType.STRING })
   numero_serie?: string;
-
-  @Column({ type: DataType.INTEGER, defaultValue: 1 })
-  ativo!: number;
 
   //Eike: alteração feita por mim para funcionar com o endpoint de relacionamento.
 
