@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { FuncionarioRepository } from './funcionario.repository';
 import { Funcionario } from './funcionario.model';
 import { FuncaoRepository } from '../funcao/funcao.repository';
@@ -12,21 +12,21 @@ export class FuncionarioService {
   constructor(
     private readonly repository: FuncionarioRepository,
     private readonly funcaoRepository: FuncaoRepository,
-    private readonly servicoRepository: ServicoRepository, //  crude junior
+    private readonly servicoRepository: ServicoRepository,
   ) {}
 
   async listar(): Promise<Funcionario[]> {
     return this.repository.getAll();
   }
 
-  async vizualisar(id: number): Promise<Funcionario | null> {
+  async visualizar(id: number): Promise<Funcionario | null> {
     return this.repository.getOne(id);
   }
 
   async criar(dados: FuncionarioDto): Promise<Funcionario> {
     const funcao = await this.funcaoRepository.getOne(dados.id_funcao);
     if (!funcao) {
-      throw new Error(`Função com ID ${dados.id_funcao} não encontrada`);
+      throw new NotFoundException(`Função com ID ${dados.id_funcao} não encontrada`);
     }
     return this.repository.create(dados);
   }
@@ -41,17 +41,17 @@ export class FuncionarioService {
 
   async ativar(id: number) {
     const funcionario = await this.repository.getOne(id);
-    if (!funcionario) throw new Error('Funcionário não encontrado!');
+    if (!funcionario) throw new NotFoundException('Funcionário não encontrado');
     if (funcionario.dataValues.ativo == 1)
-      throw new Error('Funcionário já está ativado!');
+      throw new BadRequestException('Funcionário já está ativado');
     return this.repository.enable(id);
   }
 
   async desativar(id: number) {
     const funcionario = await this.repository.getOne(id);
-    if (!funcionario) throw new Error('Funcionário não encontrado!');
+    if (!funcionario) throw new NotFoundException('Funcionário não encontrado');
     if (funcionario.dataValues.ativo == 0)
-      throw new Error('Funcionário já está desativado!');
+      throw new BadRequestException('Funcionário já está desativado');
     return this.repository.disable(id);
   }
 
@@ -65,7 +65,7 @@ export class FuncionarioService {
   ): Promise<Funcionario> {
     const funcao = await this.funcaoRepository.getOne(id_funcao);
     if (!funcao) {
-      throw new Error(`Função com ID ${id_funcao} não existe`);
+      throw new NotFoundException(`Função com ID ${id_funcao} não existe`);
     }
 
     await this.repository.update(id_funcionario, { id_funcao });
@@ -73,7 +73,7 @@ export class FuncionarioService {
     const funcionarioAtualizado = await this.repository.getOne(id_funcionario);
 
     if (!funcionarioAtualizado) {
-      throw new Error('Funcionário não encontrado após atualização');
+      throw new NotFoundException('Funcionário não encontrado após atualização');
     }
 
     return funcionarioAtualizado;

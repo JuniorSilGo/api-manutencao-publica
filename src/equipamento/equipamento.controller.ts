@@ -26,6 +26,21 @@ export class EquipamentoController {
     return this.equipamentoService.findAll();
   }
 
+  @Get('buscar/:termo')
+  buscarPorTermo(@Param('termo') termo: string) {
+    return this.equipamentoService.buscarPorTermo(termo);
+  }
+
+  @Get('com-falha')
+  listarComFalha() {
+    return this.equipamentoService.listarComFalha();
+  }
+
+  @Get('resumo')
+  resumo() {
+    return this.equipamentoService.gerarResumo();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.equipamentoService.findOne(id);
@@ -47,20 +62,5 @@ export class EquipamentoController {
   @Patch(':id/ativar')
   toggleAtivo(@Param('id', ParseIntPipe) id: number) {
     return this.equipamentoService.toggleAtivo(id);
-  }
-
-  @Get('buscar/:termo')
-  buscarPorTermo(@Param('termo') termo: string) {
-    return this.equipamentoService.buscarPorTermo(termo);
-  }
-
-  @Get('com-falha')
-  listarComFalha() {
-    return this.equipamentoService.listarComFalha();
-  }
-
-  @Get('resumo')
-  resumo() {
-    return this.equipamentoService.gerarResumo();
   }
 }

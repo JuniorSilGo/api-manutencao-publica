@@ -9,6 +9,7 @@ import { EquipamentoModule } from './equipamento/equipamento.module';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { RelatorioModule } from './relatorio/relatorio.module';
 import { LocalModule } from './local/local.module';
+import { ManutencaoFuncionarioModule } from './manutencao-funcionario/manutencao-funcionario.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LocalModule } from './local/local.module';
     EquipamentoModule,
     RelatorioModule,
     LocalModule,
+    ManutencaoFuncionarioModule,
   ],
   providers: [JwtStrategy],
 })

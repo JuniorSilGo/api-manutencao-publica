@@ -27,6 +27,12 @@ export class RelatorioController {
     return this.service.findAll();
   }
 
+  @Get('tipo/:tipo')
+  @ApiOperation({ summary: 'Buscar relatórios por tipo' })
+  findByTipo(@Param('tipo') tipo: string) {
+    return this.service.findByTipo(tipo);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Buscar relatório por ID' })
   findOne(@Param('id') id: string) {
@@ -37,12 +43,6 @@ export class RelatorioController {
   @ApiOperation({ summary: 'Remover relatório por ID' })
   remove(@Param('id') id: string) {
     return this.service.remove(+id);
-  }
-
-  @Get('tipo/:tipo')
-  @ApiOperation({ summary: 'Buscar relatórios por tipo' })
-  findByTipo(@Param('tipo') tipo: string) {
-    return this.service.findByTipo(tipo);
   }
 
   @Post(':id/gerar')

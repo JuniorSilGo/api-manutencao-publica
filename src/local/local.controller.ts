@@ -27,30 +27,8 @@ export class LocalController {
     return this.localService.findInativos();
   }
 
-  @Get(':id_local')
-  findOne(@Param('id_local') id_local: string) {
-    return this.localService.findOne(+id_local);
-  }
-
-  // --- ENDPOINT COM RELACIONAMENTO ---
-  @Get(':id_local/equipamentos')
-  listarEquipamentos(@Param('id_local') id_local: string) {
-    return this.localService.listarEquipamentos(+id_local);
-  }
-
-  @Post(':id_local/equipamentos')
-  criarEquipamentoNoLocal(@Param('id_local') id_local: string, @Body() dadosEquipamento: any,) {
-    return this.localService.criarEquipamentoNoLocal(+id_local, dadosEquipamento);
-  }
-
-  @Delete(':id_local/equipamentos/:id_equipamento')
-  removerEquipamentoDeLocal(@Param('id_local') id_local: string, @Param('id_equipamento') id_equipamento: string,) {
-    return this.localService.removerEquipamentoDeLocal(+id_local, +id_equipamento);
-  }
-  //Fim endpoints de relacionamento
-
   @Get('paginado')
-  findPaginado(@Query('pagina') pagina: string, @Query('tamanho') tamanho: string,) {
+  findPaginado(@Query('pagina') pagina: string, @Query('tamanho') tamanho: string) {
     const page = Number(pagina) || 1;
     const size = Number(tamanho) || 10;
     const offset = (page - 1) * size;
@@ -60,6 +38,31 @@ export class LocalController {
   @Get('busca-parcial')
   findByNomeParcial(@Query('nome') nome: string) {
     return this.localService.findByNomeParcial(nome);
+  }
+
+  @Get('busca')
+  findByNome(@Query('nome') nome: string) {
+    return this.localService.findByNome(nome);
+  }
+
+  @Get(':id_local')
+  findOne(@Param('id_local') id_local: string) {
+    return this.localService.findOne(+id_local);
+  }
+
+  @Get(':id_local/equipamentos')
+  listarEquipamentos(@Param('id_local') id_local: string) {
+    return this.localService.listarEquipamentos(+id_local);
+  }
+
+  @Post(':id_local/equipamentos')
+  criarEquipamentoNoLocal(@Param('id_local') id_local: string, @Body() dadosEquipamento: any) {
+    return this.localService.criarEquipamentoNoLocal(+id_local, dadosEquipamento);
+  }
+
+  @Delete(':id_local/equipamentos/:id_equipamento')
+  removerEquipamentoDeLocal(@Param('id_local') id_local: string, @Param('id_equipamento') id_equipamento: string) {
+    return this.localService.removerEquipamentoDeLocal(+id_local, +id_equipamento);
   }
 
   @Patch(':id_local')
@@ -80,10 +83,5 @@ export class LocalController {
   @Patch(':id_local/inativar')
   inativar(@Param('id_local') id_local: string) {
     return this.localService.inativar(+id_local);
-  }
-
-  @Get('busca')
-  findByNome(@Query('nome') nome: string) {
-    return this.localService.findByNome(nome);
   }
 }

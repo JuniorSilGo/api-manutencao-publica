@@ -11,6 +11,8 @@ import {
   ValidationPipe,
   Patch,
   UseGuards,
+  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { FuncionarioService } from './funcionario.service';
 import { Funcionario } from './funcionario.model';
@@ -39,14 +41,6 @@ export class FuncionarioController {
     return this.service.listar();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Lista um funcionário pelo ID.' })
-  async visualizar(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Funcionario | null> {
-    return this.service.vizualisar(id);
-  }
-
   @Post()
   @ApiOperation({ summary: 'Cria um novo funcionário.' })
   @UsePipes(new ValidationPipe())
@@ -54,11 +48,22 @@ export class FuncionarioController {
     return this.service.criar(dados);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Lista um funcionário pelo ID.' })
+  async visualizar(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Funcionario | null> {
+    const funcionario = await this.service.visualizar(id);
+    if (!funcionario) {
+      throw new NotFoundException('Funcionário não encontrado');
+    }
+    return funcionario;
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Atualiza um funcionário pelo ID.' })
   @UsePipes(new ValidationPipe())
   async atualizar(
-
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: FuncionarioUpdateDto,
   ): Promise<[number]> {
@@ -71,28 +76,25 @@ export class FuncionarioController {
     return this.service.deletar(id);
   }
 
-  @Get(':id/ativar')
+  @Patch(':id/ativar')
   @ApiOperation({ summary: 'Ativa um funcionário pelo ID.' })
   async ativar(@Param('id', ParseIntPipe) id: number) {
     try {
-
       await this.service.ativar(id);
       return { message: 'Funcionário ativado com sucesso' };
     } catch (error) {
-      throw new Error(error.message);
+      throw new BadRequestException(error.message || 'Erro ao ativar funcionário');
     }
   }
 
-  @Get(':id/desativar')
+  @Patch(':id/desativar')
   @ApiOperation({ summary: 'Desativa um funcionário pelo ID.' })
   async desativar(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.service.desativar(id);
-
       return { message: 'Funcionário desativado com sucesso' };
     } catch (error) {
-
-      throw new Error(error.message);
+      throw new BadRequestException(error.message || 'Erro ao desativar funcionário');
     }
   }
 
@@ -100,7 +102,6 @@ export class FuncionarioController {
   @ApiOperation({
     summary: 'Atualiza o campo ID_FUNCAO de um funcionário pelo ID.',
   })
-
   async atualizarFuncao(
     @Param('id', ParseIntPipe) id: number,
     @Body() dados: AtualizarIdFuncaoDto,
@@ -108,15 +109,9 @@ export class FuncionarioController {
     return this.service.atualizarFuncao(id, dados.id_funcao);
   }
 
-    // @Get('funcionarios/exemplo-protegido')
-  // findProtected() {
-  //   return 'Acesso autorizado!';
-  // }
-
   @Get(':id/servicos')
-  @ApiOperation({ summary: 'Lista todos of serviços atribuidos a um Funcionário pelo ID.' })
+  @ApiOperation({ summary: 'Lista todos os serviços atribuídos a um Funcionário pelo ID.' })
   async listarServicos(@Param('id', ParseIntPipe) id: number) {
     return this.service.listarServicos(id);
   }
-
 }

@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @ApiTags('Serviços')
 @ApiExtraModels(CreateServicoDto, UpdateServicoDto)
-@Controller('servico')
+@Controller('servicos')
 export class ServicoController {
   constructor(private readonly service: ServicoService) {}
   @ApiOperation({ summary: 'Lista todos os serviços cadastrados.' })
